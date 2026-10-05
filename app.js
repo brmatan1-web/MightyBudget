@@ -43,11 +43,20 @@ fetch("https://script.google.com/macros/s/AKfycbxG9AtUDu-M6fVGhrRiscb6V2KyH0CMsP
   .catch(err => console.error(err));
 console.log("MIGHTYBUDGET LOADED");
 
-fetch("כתובת ה-Web App שלך")
+fetch("https://script.google.com/macros/s/AKfycbxG9AtUDu-M6rVGhnRiscb6VZkyH0CMsPb......../exec")
   .then(r => r.json())
   .then(data => {
+
+    document.getElementById("nextChargeAmount").innerHTML =
+      "₪" + Math.round(data.confirmedAmount).toLocaleString();
+
+    document.getElementById("chargeMonth").innerHTML =
+      "חיוב " + data.month;
+
+    document.getElementById("forecastAmount").innerHTML =
+      "צפי ₪" + Math.round(data.forecastAmount).toLocaleString();
+
     console.log("API DATA", data);
+
   })
-  .catch(err => {
-    console.error("API ERROR", err);
-  });
+  .catch(err => console.error(err));
