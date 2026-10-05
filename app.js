@@ -20,7 +20,13 @@ function bindTx(){document.querySelectorAll('.tx').forEach(x=>x.onclick=()=>open
 function renderTx(filter='all'){let list=transactions.filter(t=>filter==='all'||filter==='installment'&&t.installment||filter==='uncategorized'&&t.category==='לא מסווג');let q=document.querySelector('#searchInput')?.value||'';if(q)list=list.filter(t=>(t.name+t.category).includes(q));document.querySelector('#txList').innerHTML=list.map(txHtml).join('')||'<p style="text-align:center;color:#718096">לא נמצאו עסקאות</p>';document.querySelector('#recentList').innerHTML=transactions.slice(0,4).map(txHtml).join('');bindTx()}
 function renderBudget(){document.querySelector('#budgetList').innerHTML=categories.map(c=>`<div class="budget-row"><div class="row-top"><span class="cat-icon" style="background:${c.color}18">${c.icon}</span><div class="row-text"><b>${c.name}</b><small>${fmt(c.spent)} נוצלו</small></div><div class="row-amount"><b>${fmt(c.budget-c.spent)}</b><small>נותרו</small></div></div><div class="bar"><i style="width:${Math.min(100,c.spent/c.budget*100)}%;background:${c.spent>=c.budget?'#e05260':c.color}"></i></div></div>`).join('')}
 function renderInstallments(){document.querySelector('#installments').innerHTML=transactions.filter(t=>t.installment).map(t=>`<div class="installment"><span class="tx-icon">${t.icon}</span><div><b>${t.name}</b><small>תשלום ${t.installment}</small></div><strong>${fmt(t.amount)}</strong></div>`).join('')}
-const titles={home:'שלום, מתן',transactions:'עסקאות',forecast:'תחזית',budget:'תקציב',settings:'הגדרות'};
+const titles={
+ home:'שלום, מתן',
+ transactions:'עסקאות',
+ forecast:'תחזית',
+ accounts:'חשבונות וחיבורים',
+ settings:'הגדרות'
+};
 function go(screen){document.querySelectorAll('.screen,.bottom-nav button').forEach(x=>x.classList.remove('active'));document.querySelector(`[data-screen="${screen}"]`).classList.add('active');document.querySelector(`[data-target="${screen}"]`)?.classList.add('active');document.querySelector('#screenTitle').textContent=titles[screen];window.scrollTo(0,0)}
 document.querySelectorAll('.bottom-nav button').forEach(b=>b.onclick=()=>go(b.dataset.target));document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
 let editing=null;function openEditor(id){editing=transactions.find(t=>t.id===id);editName.textContent=editing.name;editDate.textContent=editing.date;editAmount.textContent=fmt(editing.amount);editIcon.textContent=editing.icon;editCategory.innerHTML=categoryNames.map(c=>`<option ${c===editing.category?'selected':''}>${c}</option>`).join('');editNote.value=editing.note||'';unusual.checked=!!editing.unusual;backdrop.classList.add('show');editSheet.classList.add('show')}
