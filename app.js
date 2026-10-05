@@ -57,7 +57,17 @@ document.getElementById("chargeMonth").innerHTML =
 
     document.getElementById("forecastAmount").innerHTML =
       "צפי ₪" + Math.round(data.forecastAmount).toLocaleString();
+const activeCards = data.cards
+  .filter(card => Number(card.amount) > 0);
 
+const cardsHtml = activeCards
+  .map(card =>
+    `${card.card} → ₪${Math.round(card.amount).toLocaleString()}`
+  )
+  .join("<br>");
+
+document.getElementById("chargeMonth").innerHTML =
+  cardsHtml;
     console.log("API DATA", data);
 
   })
