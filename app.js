@@ -35,3 +35,13 @@ fetch("https://script.google.com/macros/s/AKfycbxG9AtUDu-M6fVGhrRiscb6V2KyH0CMsP
     console.log("API DATA", data);
   })
   .catch(err => console.error(err));
+console.log("MIGHTYBUDGET LOADED");
+
+fetch("כתובת ה-Web App שלך")
+  .then(r => r.json())
+  .then(data => {
+    console.log("API DATA", data);
+  })
+  .catch(err => {
+    console.error("API ERROR", err);
+  });
