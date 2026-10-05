@@ -35,7 +35,7 @@ let currentFilter='all';document.querySelectorAll('.chip').forEach(c=>c.onclick=
 userBtn.onclick=()=>userMenu.classList.toggle('show');document.querySelectorAll('#userMenu button').forEach(b=>b.onclick=()=>{let u=b.dataset.user;screenTitle.textContent='שלום, '+u;userBtn.textContent=u[0];userMenu.classList.remove('show');toast.textContent='עברת למשתמש '+u;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1500)});
 editBudget.onclick=()=>{go('settings');toast.textContent='עריכת תקציבים תהיה זמינה כאן';toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1700)};
 renderCategories();renderTx();renderBudget();renderInstallments();if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');
-fetch("כתובת ה-Web App המלאה שלך")
+fetch("https://script.google.com/macros/s/AKfycbxG9AtUDu-M6fVGhrRiscb6V2KyH0CMsPbc4SRk-ffh0upQ6GdYli9kq8UW8s-8nO2EzQ/exec")
   .then(r => r.json())
   .then(data => {
 
