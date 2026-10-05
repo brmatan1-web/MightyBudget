@@ -41,7 +41,17 @@ fetch("https://script.google.com/macros/s/AKfycbxG9AtUDu-M6fVGhrRiscb6V2KyH0CMsP
 alert(JSON.stringify(data));
     document.getElementById("nextChargeAmount").innerHTML =
       "₪" + Math.round(data.confirmedAmount).toLocaleString();
+const activeCards = data.cards
+  .filter(card => card.amount > 0);
 
+const cardsHtml = activeCards
+  .map(card =>
+    `${card.card} → ₪${Math.round(card.amount).toLocaleString()}`
+  )
+  .join("<br>");
+
+document.getElementById("chargeMonth").innerHTML =
+  cardsHtml;
     document.getElementById("chargeMonth").innerHTML =
       "חיוב " + data.month;
 
