@@ -38,7 +38,7 @@ renderCategories();renderTx();renderBudget();renderInstallments();if('serviceWor
 fetch("https://script.google.com/macros/s/AKfycbxG9AtUDu-M6fVGhrRiscb6V2KyH0CMsPbc4SRk-ffh0upQ6GdYli9kq8UW8s-8nO2EzQ/exec")
   .then(r => r.json())
   .then(data => {
-
+alert(JSON.stringify(data));
     document.getElementById("nextChargeAmount").innerHTML =
       "₪" + Math.round(data.confirmedAmount).toLocaleString();
 
