@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#081b33"><title>MightyBudget</title>
+  <link rel="manifest" href="manifest.json"><link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app-shell">
+  <header class="topbar">
+    <div><div class="eyebrow">התקציב המשפחתי</div><h1 id="screenTitle">שלום, מתן</h1></div>
+    <button class="avatar" id="userBtn" aria-label="החלפת משתמש">מ</button>
+  </header>
+
+  <main>
+    <section class="screen active" data-screen="home">
+      <div class="month-row"><button id="prevMonth">›</button><div><b id="monthLabel">אוקטובר 2026</b><small>תמונה משותפת</small></div><button id="nextMonth">‹</button></div>
+      <article class="hero-card">
+        <div class="hero-top"><span>הוצאות החודש</span><span class="trend">↓ 8% מול חודש קודם</span></div>
+        <div class="hero-total">₪9,081</div>
+        <div class="progress"><i style="width:72%"></i></div>
+        <div class="hero-bottom"><span>תקציב ₪12,600</span><span>נותרו ₪3,519</span></div>
+      </article>
+      <div class="grid2">
+        <article class="mini-card"><span class="icon purple">↗</span><small>תחזית לחודש הבא</small><b>₪8,420</b><em>₪6,770 ודאי</em></article>
+        <article class="mini-card"><span class="icon cyan">▥</span><small>תשלומים פעילים</small><b>14</b><em>₪2,105 בחודש הבא</em></article>
+      </div>
+      <div class="section-head"><h2>הוצאות לפי קטגוריה</h2><button class="link" data-go="budget">לכל התקציב</button></div>
+      <div id="categoryCards" class="category-list"></div>
+      <div class="section-head"><h2>עסקאות אחרונות</h2><button class="link" data-go="transactions">לכל העסקאות</button></div>
+      <div id="recentList" class="tx-list compact"></div>
+    </section>
+
+    <section class="screen" data-screen="transactions">
+      <div class="search"><span>⌕</span><input id="searchInput" placeholder="חיפוש בית עסק או קטגוריה"></div>
+      <div class="chips"><button class="chip active" data-filter="all">הכול</button><button class="chip" data-filter="installment">תשלומים</button><button class="chip" data-filter="uncategorized">לא מסווג</button></div>
+      <div class="summary-strip"><span><small>סה״כ החודש</small><b>₪9,081</b></span><span><small>עסקאות</small><b>125</b></span></div>
+      <div id="txList" class="tx-list"></div>
+    </section>
+
+    <section class="screen" data-screen="forecast">
+      <article class="forecast-hero"><small>סך הכול צפוי בנובמבר</small><b>₪8,420</b><div><span>ודאי ₪6,770</span><span>הערכה ₪1,650</span></div></article>
+      <div class="confidence"><b>רמת ודאות גבוהה</b><span>80% מהסכום כבר ידוע</span></div>
+      <h2>מועדי חיוב</h2>
+      <div class="charge-card"><div class="datebox"><b>2</b><small>בנוב׳</small></div><div><b>שלושה כרטיסים</b><small>2740 • 6067 • 1540</small></div><strong>₪4,210</strong></div>
+      <div class="charge-card"><div class="datebox"><b>10</b><small>בנוב׳</small></div><div><b>ישראכרט</b><small>כרטיס 1438</small></div><strong>₪2,560</strong></div>
+      <div class="section-head"><h2>תשלומים קרובים</h2><span>4 מוצגים</span></div>
+      <div id="installments" class="installment-list"></div>
+    </section>
+
+    <section class="screen" data-screen="budget">
+      <article class="budget-head"><div><small>תקציב משפחתי</small><b>₪12,600</b></div><button id="editBudget">עריכת תקציבים</button></article>
+      <div class="budget-ring"><div><b>72%</b><small>נוצל</small></div><p>₪9,081 מתוך ₪12,600</p></div>
+      <div id="budgetList" class="budget-list"></div>
+    </section>
+
+    <section class="screen" data-screen="settings">
+      <article class="profile"><div class="avatar big">מ</div><div><b>הבית של מתן</b><small>2 משתמשים • 4 כרטיסים</small></div></article>
+      <div class="settings-group"><h3>בני הבית</h3><button class="setting"><span>👤</span><div><b>מתן</b><small>מנהל</small></div><i>‹</i></button><button class="setting"><span>👤</span><div><b>בת הזוג</b><small>גישה מלאה</small></div><i>‹</i></button></div>
+      <div class="settings-group"><h3>חיבורים</h3><button class="setting"><span>💳</span><div><b>ישראכרט</b><small class="ok">מסונכרן • 4 כרטיסים</small></div><i>‹</i></button><button class="setting"><span>🏦</span><div><b>בנק הפועלים</b><small>עדיין לא חובר</small></div><i>‹</i></button><button class="setting"><span>💳</span><div><b>MAX</b><small>עדיין לא חובר</small></div><i>‹</i></button></div>
+      <div class="settings-group"><h3>העדפות</h3><button class="setting"><span>🔔</span><div><b>התראות</b><small>חריגה וסנכרון</small></div><i>‹</i></button><button class="setting"><span>🏷️</span><div><b>כללי סיווג</b><small>ניהול קטגוריות</small></div><i>‹</i></button></div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <button class="active" data-target="home"><span>⌂</span><small>בית</small></button>
+    <button data-target="transactions"><span>☷</span><small>עסקאות</small></button>
+    <button data-target="forecast"><span>◔</span><small>תחזית</small></button>
+    <button data-target="budget"><span>◎</span><small>תקציב</small></button>
+    <button data-target="settings"><span>⚙</span><small>הגדרות</small></button>
+  </nav>
+</div>
+
+<div class="sheet-backdrop" id="backdrop"></div>
+<aside class="bottom-sheet" id="editSheet">
+  <div class="grab"></div><div class="sheet-title"><h2>עריכת עסקה</h2><button class="close">×</button></div>
+  <div class="merchant"><span id="editIcon">🛒</span><div><b id="editName"></b><small id="editDate"></small></div><strong id="editAmount"></strong></div>
+  <label>קטגוריה<select id="editCategory"></select></label>
+  <label>הערה<input id="editNote" placeholder="הערה אישית (אופציונלי)"></label>
+  <label class="toggle-row"><span><b>עסקה חריגה</b><small>תוצג באופן בולט בדשבורד</small></span><input id="unusual" type="checkbox"></label>
+  <button class="primary" id="saveTx">שמירת שינויים</button>
+</aside>
+
+<div class="user-menu" id="userMenu"><b>מי משתמש עכשיו?</b><button data-user="מתן">מ <span>מתן</span></button><button data-user="בת הזוג">ב <span>בת הזוג</span></button></div>
+<div class="toast" id="toast">השינויים נשמרו</div>
+<script src="app.js"></script>
+</body></html>
