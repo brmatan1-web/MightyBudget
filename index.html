@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#081b33">
   <title>MightyBudget</title>
   <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="stylesheet" href="styles.css?v=4">
 </head>
 <body>
 <div class="app">
@@ -14,7 +14,6 @@
     <div><small>התקציב המשפחתי</small><h1 id="title">שלום, מתן</h1></div>
     <div class="avatar">מ</div>
   </header>
-
   <main>
     <section class="page active" data-page="home">
       <div class="month"><b id="month">טוען...</b><small>תמונה משותפת</small></div>
@@ -49,7 +48,7 @@
         <button data-filter="uncat">לא מסווג</button>
       </div>
       <div class="summary"><span>סה״כ <b id="txTotal">₪0</b></span><span>עסקאות <b id="txCount">0</b></span></div>
-      <div id="transactions" class="card"></div>
+      <div id="transactions"></div>
     </section>
 
     <section class="page" data-page="categories">
@@ -76,7 +75,6 @@
       </div>
     </section>
   </main>
-
   <nav>
     <button class="active" data-target="home">⌂<small>בית</small></button>
     <button data-target="charges">💳<small>חיובים</small></button>
@@ -104,6 +102,6 @@
   <button class="primary" id="saveApi">שמור וטען מחדש</button>
 </aside>
 <div id="toast" class="toast"></div>
-<script src="app.js?v=3"></script>
+<script src="app.js?v=4"></script>
 </body>
 </html>

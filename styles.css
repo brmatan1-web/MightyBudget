@@ -26,7 +26,8 @@ h2{font-size:18px}
 .forecast>div:last-child{font-size:11px;text-align:left}
 .head,.pagehead{display:flex;align-items:center;justify-content:space-between}
 .head button{border:0;background:none;color:var(--blue);font-family:inherit}
-.card,.charge,.connection,.profile{background:#fff;border-radius:16px;overflow:hidden}
+.card,.charge,.connection,.profile,.txgroup{background:#fff;border-radius:16px;overflow:hidden}
+.charge,.txgroup{margin-bottom:11px}
 .empty{text-align:center;color:var(--muted);padding:22px}
 .row,.tx,.account,.provider{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
 .row:last-child,.tx:last-child,.account:last-child{border:0}
@@ -43,7 +44,6 @@ h2{font-size:18px}
 .bar{height:5px;background:#edf1f6;border-radius:8px;margin-top:8px;overflow:hidden}
 .bar i{display:block;height:100%}
 .topcat{background:#fff;border-radius:15px;padding:12px;margin-bottom:8px;display:flex;gap:10px;align-items:center}
-.charge{margin-bottom:11px}
 .chargehead{padding:13px;background:#eaf0f8;display:flex;justify-content:space-between;align-items:center}
 .chargehead b,.chargehead small{display:block}
 .chargehead small{color:var(--muted)}
