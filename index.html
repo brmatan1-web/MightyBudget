@@ -1,9 +1,109 @@
-<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#081b33"><title>MightyBudget V2</title><link rel="manifest" href="manifest.json"><link rel="stylesheet" href="styles.css?v=2"></head><body><div class="app"><header><div><small>התקציב המשפחתי</small><h1 id="title">שלום, מתן</h1></div><div class="avatar">מ</div></header><main>
-<section class="page active" data-page="home"><div class="month"><b id="month">טוען...</b><small>תמונה משותפת</small></div><article class="hero"><small>החיוב הקרוב</small><strong id="confirmed">טוען...</strong><div id="breakdown" class="breakdown">טוען פירוט...</div><footer><span id="chargeMonth"></span><span id="lastSync"></span></footer></article><article class="forecast"><div><small>תחזית</small><b id="forecast">—</b></div><div><span>ודאי <b id="certain">—</b></span><span>משוער <b id="estimated">—</b></span></div></article><div class="head"><h2>הקטגוריות המובילות</h2><button data-go="categories">לכל הקטגוריות</button></div><div id="topCategories" class="card"><p class="empty">טוען...</p></div><div class="head"><h2>עסקאות אחרונות</h2><button data-go="transactions">לכל העסקאות</button></div><div id="recent" class="card"><p class="empty">טוען...</p></div></section>
-<section class="page" data-page="charges"><h2>חיובים קרובים</h2><div id="charges"></div></section>
-<section class="page" data-page="transactions"><div class="search"><input id="search" placeholder="חיפוש בית עסק או קטגוריה"></div><div class="chips"><button class="active" data-filter="all">הכול</button><button data-filter="open">פתוחות</button><button data-filter="uncat">לא מסווג</button></div><div class="summary"><span>סה״כ <b id="txTotal">₪0</b></span><span>עסקאות <b id="txCount">0</b></span></div><div id="transactions" class="card"></div></section>
-<section class="page" data-page="categories"><div class="pagehead"><div><h2>קטגוריות</h2><small>תקציבים חודשיים והוצאות</small></div><button class="primary small" id="addCategory">＋ הוסף</button></div><div id="categories" class="card"></div></section>
-<section class="page" data-page="accounts"><div class="pagehead"><div><h2>חשבונות וחיבורים</h2><small>מוצגים רק חיבורים פעילים</small></div><button class="primary small" id="addAccount">＋ הוסף</button></div><div id="accounts"></div></section>
-<section class="page" data-page="settings"><div class="profile"><div class="avatar dark">מ</div><div><b>הבית של מתן</b><small>2 משתמשים</small></div></div><div class="card settings"><button id="connectionSettings">🔗 <span><b>חיבור לנתונים</b><small id="apiState">בודק...</small></span></button><button>🔔 <span><b>התראות</b><small>יוגדר בשלב הבא</small></span></button></div></section>
-</main><nav><button class="active" data-target="home">⌂<small>בית</small></button><button data-target="charges">💳<small>חיובים</small></button><button data-target="transactions">☷<small>עסקאות</small></button><button data-target="categories">◫<small>קטגוריות</small></button><button data-target="accounts">🏦<small>חשבונות</small></button><button data-target="settings">⚙<small>הגדרות</small></button></nav></div>
-<div class="overlay" id="overlay"></div><aside class="sheet" id="categoryModal"><div class="grab"></div><div class="modalhead"><h2 id="modalTitle">קטגוריה</h2><button class="x">×</button></div><label>שם<input id="catName"></label><label>תקציב חודשי<input id="catBudget" type="number"></label><label>אייקון<input id="catIcon" placeholder="🛒"></label><button class="primary" id="saveCategory">שמור</button></aside><aside class="sheet" id="apiModal"><div class="grab"></div><div class="modalhead"><h2>חיבור לנתונים</h2><button class="x">×</button></div><label>כתובת API<input id="apiUrl"></label><label>PIN לשינויים<input id="apiPin" type="password"></label><button class="primary" id="saveApi">שמור וטען מחדש</button></aside><div id="toast" class="toast"></div><script src="app.js?v=2"></script></body></html>
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#081b33">
+  <title>MightyBudget</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="styles.css?v=3">
+</head>
+<body>
+<div class="app">
+  <header>
+    <div><small>התקציב המשפחתי</small><h1 id="title">שלום, מתן</h1></div>
+    <div class="avatar">מ</div>
+  </header>
+
+  <main>
+    <section class="page active" data-page="home">
+      <div class="month"><b id="month">טוען...</b><small>תמונה משותפת</small></div>
+      <article class="hero">
+        <small>החיוב הקרוב</small>
+        <strong id="confirmed">טוען...</strong>
+        <div id="breakdown" class="breakdown">טוען פירוט...</div>
+        <footer><span id="chargeMonth"></span><span id="lastSync"></span></footer>
+      </article>
+      <article class="forecast">
+        <div><small>תחזית</small><b id="forecast">—</b></div>
+        <div><span>ודאי <b id="certain">—</b></span><span>משוער <b id="estimated">—</b></span></div>
+      </article>
+      <div class="head"><h2>הקטגוריות המובילות</h2><button data-go="categories">לכל הקטגוריות</button></div>
+      <div id="topCategories"><p class="empty">טוען...</p></div>
+      <div class="head"><h2>עסקאות פתוחות אחרונות</h2><button data-go="transactions">לכל העסקאות</button></div>
+      <div id="recent" class="card"><p class="empty">טוען...</p></div>
+    </section>
+
+    <section class="page" data-page="charges">
+      <h2>חיובים קרובים</h2>
+      <p class="hint">לפי עסקאות שעוד לא ירדו מהחשבון</p>
+      <div id="charges"><p class="empty">טוען...</p></div>
+    </section>
+
+    <section class="page" data-page="transactions">
+      <div class="search"><input id="search" placeholder="חיפוש בית עסק או קטגוריה"></div>
+      <div class="chips">
+        <button class="active" data-filter="open">פתוחות</button>
+        <button data-filter="charged">חויבו</button>
+        <button data-filter="all">הכול</button>
+        <button data-filter="uncat">לא מסווג</button>
+      </div>
+      <div class="summary"><span>סה״כ <b id="txTotal">₪0</b></span><span>עסקאות <b id="txCount">0</b></span></div>
+      <div id="transactions" class="card"></div>
+    </section>
+
+    <section class="page" data-page="categories">
+      <div class="pagehead">
+        <div><h2>קטגוריות</h2><small>הוצאות החודש מול התקציב</small></div>
+        <button class="primary small" id="addCategory">＋ הוסף</button>
+      </div>
+      <div id="categories" class="card"></div>
+    </section>
+
+    <section class="page" data-page="accounts">
+      <div class="pagehead">
+        <div><h2>חשבונות וחיבורים</h2><small>מוצגים רק חיבורים פעילים</small></div>
+        <button class="primary small" id="addAccount">＋ הוסף</button>
+      </div>
+      <div id="accounts"></div>
+    </section>
+
+    <section class="page" data-page="settings">
+      <div class="profile"><div class="avatar dark">מ</div><div><b>הבית של מתן</b><small>2 משתמשים</small></div></div>
+      <div class="card settings">
+        <button id="connectionSettings">🔗 <span><b>חיבור לנתונים</b><small id="apiState">בודק...</small></span></button>
+        <button>🔔 <span><b>התראות</b><small>יוגדר בשלב הבא</small></span></button>
+      </div>
+    </section>
+  </main>
+
+  <nav>
+    <button class="active" data-target="home">⌂<small>בית</small></button>
+    <button data-target="charges">💳<small>חיובים</small></button>
+    <button data-target="transactions">☷<small>עסקאות</small></button>
+    <button data-target="categories">◫<small>קטגוריות</small></button>
+    <button data-target="accounts">🏦<small>חשבונות</small></button>
+    <button data-target="settings">⚙<small>הגדרות</small></button>
+  </nav>
+</div>
+
+<div class="overlay" id="overlay"></div>
+<aside class="sheet" id="categoryModal">
+  <div class="grab"></div>
+  <div class="modalhead"><h2 id="modalTitle">קטגוריה</h2><button class="x">×</button></div>
+  <label>שם<input id="catName"></label>
+  <label>תקציב חודשי<input id="catBudget" type="number" inputmode="decimal"></label>
+  <label>אייקון<input id="catIcon" placeholder="🛒"></label>
+  <button class="primary" id="saveCategory">שמור</button>
+</aside>
+<aside class="sheet" id="apiModal">
+  <div class="grab"></div>
+  <div class="modalhead"><h2>חיבור לנתונים</h2><button class="x">×</button></div>
+  <label>כתובת API<input id="apiUrl"></label>
+  <label>PIN לשינויים<input id="apiPin" type="password"></label>
+  <button class="primary" id="saveApi">שמור וטען מחדש</button>
+</aside>
+<div id="toast" class="toast"></div>
+<script src="app.js?v=3"></script>
+</body>
+</html>
