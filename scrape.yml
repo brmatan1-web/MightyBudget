@@ -1,0 +1,114 @@
+# MightyBudget - סנכרון עסקאות
+# מחליף את קובץ הסנכרון המקורי. בלי טלגרם.
+# פרטי הכניסה לחשבונות מגיעים מוצפנים מהאפליקציה, ומפוענחים רק כאן, בזמן הריצה.
+name: Scrape
+
+on:
+  workflow_dispatch:
+  schedule:
+    # בשעון ישראל בערך 06:00, 13:00, 20:00
+    - cron: "0 3,10,17 * * *"
+
+permissions:
+  contents: read
+  packages: read
+
+concurrency:
+  group: scrape
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Image name
+        id: img
+        run: echo "image=ghcr.io/${GITHUB_REPOSITORY,,}:latest" >> "$GITHUB_OUTPUT"
+
+      - name: Login to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Pull image
+        run: docker pull "${{ steps.img.outputs.image }}"
+
+      - name: Build config
+        env:
+          MONEYMAN_CONFIG: ${{ secrets.MONEYMAN_CONFIG }}
+          MB_LINK: ${{ secrets.MB_LINK }}
+        run: |
+          umask 077
+          cat > "$RUNNER_TEMP/build.js" <<'EOF'
+          const crypto = require("crypto");
+          const fs = require("fs");
+          const out = process.env.RUNNER_TEMP + "/cfg.json";
+          const meta = process.env.RUNNER_TEMP + "/meta.json";
+          (async () => {
+            const base = JSON.parse(process.env.MONEYMAN_CONFIG || "{}");
+            // בלי טלגרם: לא נשלחים לשום מקום חיצוני לוגים, עסקאות או קבצים
+            if (base.options && base.options.notifications) delete base.options.notifications.telegram;
+            if (base.storage) delete base.storage.telegram;
+            let accounts = [];
+            let fallback = false;
+            try {
+              if (!process.env.MB_LINK) throw new Error("MB_LINK missing");
+              const link = JSON.parse(Buffer.from(process.env.MB_LINK, "base64").toString("utf8"));
+              const res = await fetch(link.u + (link.u.includes("?") ? "&" : "?") + "action=vault&token=" + encodeURIComponent(link.t), { redirect: "follow" });
+              const data = await res.json();
+              if (!data.ok) throw new Error("vault: " + data.error);
+              const priv = crypto.createPrivateKey({ key: Buffer.from(link.k, "base64"), format: "der", type: "pkcs8" });
+              for (const a of data.accounts) {
+                try {
+                  const box = JSON.parse(Buffer.from(a.blob, "base64").toString("utf8"));
+                  const key = crypto.privateDecrypt({ key: priv, padding: crypto.constants.RSA_PKCS1_OAEP_PADDING, oaepHash: "sha256" }, Buffer.from(box.k, "base64"));
+                  const ct = Buffer.from(box.c, "base64");
+                  const d = crypto.createDecipheriv("aes-256-gcm", key, Buffer.from(box.iv, "base64"));
+                  d.setAuthTag(ct.subarray(ct.length - 16));
+                  const plain = Buffer.concat([d.update(ct.subarray(0, ct.length - 16)), d.final()]).toString("utf8");
+                  const acc = JSON.parse(plain);
+                  if (acc.companyId !== a.companyId) throw new Error("mismatch");
+                  accounts.push(acc);
+                } catch (e) {
+                  console.log("::warning::account " + a.id + " could not be decrypted");
+                }
+              }
+              console.log("vault accounts: " + accounts.length);
+            } catch (e) {
+              console.log("::warning::vault unavailable, using accounts from MONEYMAN_CONFIG");
+              fallback = true;
+            }
+            // כשיש חיבורים מהאפליקציה, רק הם נסרקים
+            if (!fallback && accounts.length) base.accounts = accounts;
+            if (!base.accounts || !base.accounts.length) { console.log("::error::no accounts to scrape"); process.exit(1); }
+            fs.writeFileSync(out, JSON.stringify(base), { mode: 0o600 });
+            fs.writeFileSync(meta, JSON.stringify({ accounts: base.accounts.length, fallback }));
+          })().catch(e => { console.log("::error::" + e.message); process.exit(1); });
+          EOF
+          node "$RUNNER_TEMP/build.js"
+
+      - name: Run scraper
+        run: |
+          MONEYMAN_CONFIG="$(cat "$RUNNER_TEMP/cfg.json")" docker run --rm -e MONEYMAN_CONFIG -e TZ=Asia/Jerusalem "${{ steps.img.outputs.image }}"
+
+      - name: Clean up
+        if: always()
+        run: rm -f "$RUNNER_TEMP/cfg.json" "$RUNNER_TEMP/build.js"
+
+      - name: Report to app
+        if: always()
+        env:
+          MB_LINK: ${{ secrets.MB_LINK }}
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          cat > "$RUNNER_TEMP/report.js" <<'EOF'
+          const fs = require("fs");
+          (async () => {
+            if (!process.env.MB_LINK) return;
+            const link = JSON.parse(Buffer.from(process.env.MB_LINK, "base64").toString("utf8"));
+            let meta = {};
+            try { meta = JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP + "/meta.json", "utf8")); } catch (e) { }
+            await fetch(link.u, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, redirect: "follow",
+              body: JSON.stringify({ action: "report", token: link.t, status: process.env.JOB_STATUS, accounts: meta.accounts || 0, fallback: !!meta.fallback }) });
+          })().catch(() => {});
+          EOF
+          node "$RUNNER_TEMP/report.js"
